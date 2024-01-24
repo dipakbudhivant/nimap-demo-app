@@ -1,0 +1,63 @@
+<div class="row">
+  <div class="col-md-12">
+    <nb-card>
+      <nb-card-body>
+        <div style="display: flex; height: 30rem;">
+          <div class="flex-centered col-xl-8 col-lg-8 col-md-8 col-sm-12">
+            <h1 class="grid-h">I'm Looking For...</h1>
+            <form [formGroup]="searchForm" (ngSubmit)="onSearchFormSubmit()">
+              <div class="row">
+                <div class="col-md-10">
+                  <div class="input-group">
+                    <input type="text" placeholder="Enter a Job Description" class="form-control" formControlName="jobDesc"
+                      [ngClass]="{ 'is-invalid': submitted && f.jobDesc.errors }">
+                  </div>
+                  <div *ngIf="submitted && f.jobDesc.errors" class="invalid-feedback">
+                    <div *ngIf="f.jobDesc.errors.required">Job Description is required</div>
+                  </div>
+                </div>
+                <div class="col-md-2">
+                  <button class="control-button" nbButton type="submit" status="info">
+                    <nb-icon icon="search-outline" pack="eva"></nb-icon> Search
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <nb-checkbox name="partTime" id="partTime" [(ngModel)]="partTime" formControlName="partTime"
+                      type="checkbox" class="custom-checkbox">
+                    </nb-checkbox>
+                    <label class="form-control-label" for="partTime" (click)="jobType(1)">Part Time</label>
+                    <nb-checkbox name="fullTime" [(ngModel)]="fullTime" formControlName="fullTime" type="checkbox"
+                      class="custom-checkbox">
+                    </nb-checkbox>
+                    <label class="form-control-label" for="fullTime" (click)="jobType(2)">Full Time</label>
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class="input-group">
+                    <select formControlName="location" placeholder="Enter prefered location" class="input-group">
+                      <option value="">Enter prefered location</option>
+                      <option *ngFor="let location of locations" [value]="location">{{location}}</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12 text-center ">
+                  <button class="control-button homeregisterUser" nbButton size="large" type="button" (click)="registerUser()" status="info" >Register</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <hr class="styled-hr"><br/><br/><br/>
+        
+        <ngx-basic-info></ngx-basic-info>
+      </nb-card-body>
+    </nb-card>
+  </div>
+</div>
+

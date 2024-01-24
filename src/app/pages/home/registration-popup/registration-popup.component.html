@@ -1,0 +1,197 @@
+<form [formGroup]="userRegistrationForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" formControlName="firstName" placeholder="First Name" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.firstName.errors }">
+                        <div *ngIf="submitted && f.firstName.errors" class="invalid-feedback">
+                            <div *ngIf="f.firstName.errors.required">First Name is required</div>
+                            <div *ngIf="f.firstName.errors?.pattern">First Name is invalid</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="text" formControlName="lastName" placeholder="Last Name" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.lastName.errors }">
+                        <div *ngIf="submitted && f.lastName.errors" class="invalid-feedback">
+                            <div *ngIf="f.lastName.errors.required">Last Name is required</div>
+                            <div *ngIf="f.lastName.errors?.pattern">Last Name is invalid</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="emailId" class="form-control" placeholder="Email Address"
+                            [ngClass]="{ 'is-invalid': submitted && f.emailId.errors }" />
+                        <div *ngIf="submitted && f.emailId.errors" class="invalid-feedback">
+                            <div *ngIf="f.emailId.errors.required">Email is required</div>
+                            <div *ngIf="f.emailId.errors?.pattern">Email is invalid</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="phoneNumber" class="form-control"
+                            placeholder="Contact Number"
+                            [ngClass]="{ 'is-invalid': submitted && f.phoneNumber.errors }" />
+                        <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
+                            <div *ngIf="f.phoneNumber.errors.required">Contact Number is required</div>
+                            <div *ngIf="f.phoneNumber.errors?.pattern">Contact Number is invalid</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="" class="form-control-label">Age <span style="color: red;">*</span></label>
+                </div>
+                <div class="col-md-7">
+                    <div class="form-group">{{f.age.errors}}
+                        <input type="range" min="20" max="60" formControlName="age" id="age" name="age"
+                            [(ngModel)]="ageValue" [ngClass]="{ 'is-invalid': submitted && f.age.errors }"
+                            style="width: -webkit-fill-available" />
+                        <div *ngIf="submitted && f.age.errors" class="invalid-feedback">
+                            <div *ngIf="f.age.errors">Invalid Age</div>
+                            <div *ngIf="f.age.errors"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label for="" class="form-control-label"><b>{{ageValue}}</b></label>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <select formControlName="country" placeholder="Select Country" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.country.errors }" (change)="onChange($event.target.value)">
+                            <option value="">Select Country</option>
+                            <option *ngFor="let country of countryList" [value]="country.name">{{country.name}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                            <div *ngIf="f.country.errors.required">Country is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <select formControlName="state" placeholder="Select State" class="form-control"
+                            [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
+                            <option value="">Select State</option>
+                            <option *ngFor="let state of stateList" [value]="state" >{{state}}</option>
+                        </select>
+                        <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
+                            <div *ngIf="f.state.errors.required">Country is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <select formControlName="addressType" placeholder="Select Address Type"
+                            [ngClass]="{ 'is-invalid': submitted && f.addressType.errors }" [(ngModel)]="addressType"
+                            class="form-control">
+                            <option value="">Select Address Type</option>
+                            <option value="home">Home Address</option>
+                            <option value="company">Company Address</option>
+                        </select>
+                        <div *ngIf="submitted && f.addressType.errors" class="invalid-feedback">
+                            <div *ngIf="f.addressType.errors.required">Country is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="addressType === 'home'">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="homeAddress1" class="form-control"
+                            placeholder="Home Address 1"
+                            [ngClass]="{ 'is-invalid': submitted && f.homeAddress1.errors }" />
+                        <div *ngIf="submitted && f.homeAddress1.errors" class="invalid-feedback">
+                            <div *ngIf="f.homeAddress1.errors.required">Home Address 1 is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="addressType === 'home'">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="homeAddress2" class="form-control"
+                            placeholder="Home Address 2"
+                            [ngClass]="{ 'is-invalid': submitted && f.homeAddress2.errors }" />
+                        <div *ngIf="submitted && f.homeAddress2.errors" class="invalid-feedback">
+                            <div *ngIf="f.homeAddress2.errors.required">Home Address 2 is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="addressType === 'company'">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="companyAddress1" class="form-control"
+                            placeholder="Company Address 1"
+                            [ngClass]="{ 'is-invalid': submitted && f.companyAddress1.errors }" />
+                        <div *ngIf="submitted && f.companyAddress1.errors" class="invalid-feedback">
+                            <div *ngIf="f.companyAddress1.errors.required">Company Address 1 is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" *ngIf="addressType === 'company'">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <input type="text" formControlName="companyAddress2" class="form-control"
+                            placeholder="Company Address 2"
+                            [ngClass]="{ 'is-invalid': submitted && f.companyAddress2.errors }" />
+                        <div *ngIf="submitted && f.companyAddress2.errors" class="invalid-feedback">
+                            <div *ngIf="f.companyAddress2.errors.required">Company Address 2 is required</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- newsLetter -->
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <nb-checkbox name="newsLetter" id="newsLetter" formControlName="newsLetter" type="checkbox"
+                            [(ngModel)]="newsLetter" class="custom-checkbox"></nb-checkbox>
+                        <!-- <input type="checkbox" formControlName="newsLetter" id="newsLetter" class="form-control"/> -->
+                        <label for="newsLetter" class="form-control-label" (click)="toggleNewsLetter()"
+                            style="margin-left: 5px; vertical-align: 4px;">Subscribe to newsletter</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 text-right ">
+                    <button class="control-button" nbButton size="medium" type="button" status="danger" outline
+                        (click)="resetForm()" style="margin-left:5px">Cancel</button>
+                    <button class="control-button" nbButton size="medium" type="submit" status="info"
+                        style="margin-left:5px">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

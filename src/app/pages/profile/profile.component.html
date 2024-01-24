@@ -1,0 +1,28 @@
+<div class="row" *ngIf="formData">
+    <div class="col-md-12">
+        <nb-card>
+            <nb-card-header>
+                Profile
+            </nb-card-header>
+            <nb-card-body>
+                <div class="row">
+                    <div class="col-md-10">
+                        <p>
+                            I'm {{formData.firstName}} {{formData.lastName}} and Im above {{formData.age}} years and you
+                            can send your emails to {{formData.emailId}}. I live in {{formData.state}}, the state of {{formData.country}}. I
+                            like to play hockey, football and reading books.
+                            <span *ngIf="formData.newsLetter">And please send me newsletters.</span>
+                            Please reach out to me on my {{formData.phoneNumber}} phone number.
+                        </p>
+                    </div>
+                </div>
+            </nb-card-body>
+        </nb-card>
+    </div>
+</div>
+
+<div class="row" *ngIf="!formData">
+    <div class="col-md-12">
+        <h4>Please Register First</h4>
+    </div>
+</div>

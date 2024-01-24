@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="flex-centered col-xl-6 col-lg-8 col-md-10 col-sm-12">
+            <h3 class="title">We're leaders in</h3>
+            <h1 class="title">Creative Digital Recruitment</h1>
+            <small class="sub-title">Based in Surry Hills, the creative hub of Sydney we are surrounded by
+                creativity and that reflects on the type of jobs we recruit for.</small>
+            <button nbButton fullWidth (click)="goToInfo()" type="button" class="home-button" outline status="info">
+                FIND OUT MORE ABOUT US!
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- email card -->
+<div class="row email-card">
+    <div class="col-md-12">
+        <div class="flex-centered col-xl-6 col-lg-8 col-md-10 col-sm-12">
+            <small class="sub-title">Subscribe to our Job Seeker Mailing List</small>
+            <input type="text" nbInput fullWidth status="info" placeholder="Enter Your Email Address"
+            (keyup.enter)="sendEmailNoti($event.target.value)">
+            <small class="sub-title"><i>(hit enter to submit)</i></small>
+        </div>
+    </div>
+</div>

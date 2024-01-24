@@ -1,0 +1,7 @@
+::ng-deep nb-card-header {
+  .buttons {
+    button:nth-child(-n+2) {
+      display: none;
+    }
+  }
+}

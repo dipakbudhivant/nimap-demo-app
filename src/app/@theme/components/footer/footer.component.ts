@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./footer.component.scss'],
   template: `
     <span class="created-by">
-      Created with ♥ by <b><a href="https://akveo.page.link/8V2f" target="_blank">Akveo</a></b> 2019
+      Copyright @ 2014 Two Bytes Consulting <b><a href="https://nimapinfotech.com/" target="_blank">Terms & Policies.</a></b>
     </span>
     <div class="socials">
       <a href="#" target="_blank" class="ion ion-social-github"></a>
