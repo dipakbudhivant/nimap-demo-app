@@ -6,13 +6,21 @@
             </nb-card-header>
             <nb-card-body>
                 <div class="row">
-                    <div class="col-md-10">
+                    <div class="col-md-4">
+                        <div *ngIf="formData.selectedImagePath">
+                            <img [src]="formData.selectedImagePath" alt="Selected Image" width="200" height="200" />
+                        </div>
+                    </div>
+                    <div class="col-md-8">
                         <p>
-                            I'm {{formData.firstName}} {{formData.lastName}} and Im above {{formData.age}} years and you
-                            can send your emails to {{formData.emailId}}. I live in {{formData.state}}, the state of {{formData.country}}. I
-                            like to play hockey, football and reading books.
+                            I'm <b> {{formData.firstName}} {{formData.lastName}}</b> and Im above <b>{{formData.age}}</b> years and you
+                            can send your emails to <b> {{formData.emailId}}</b>. I live in <b>{{formData.state}}</b>, the state of
+                            <b>{{formData.country}}</b>. I like to play
+                            <span *ngFor="let tag of formData.tags; index as i"><b>{{tag}},</b>
+                                <!-- <span *ngIf="i > 1">,</span> <span *ngIf="i <= formData.tags.length - 1 && !(i > 1)"> and </span> -->
+                            </span>.
                             <span *ngIf="formData.newsLetter">And please send me newsletters.</span>
-                            Please reach out to me on my {{formData.phoneNumber}} phone number.
+                            Please reach out to me on my <b>{{formData.phoneNumber}}</b> phone number.
                         </p>
                     </div>
                 </div>
