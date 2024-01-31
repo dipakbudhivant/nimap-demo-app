@@ -1,7 +1,22 @@
 <form [formGroup]="userRegistrationForm" (ngSubmit)="onSubmit()">
     <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-10">
+        <div class="col-md-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group" >
+                        <input type="file" class="" id="imageInput" (change)="onFileSelected($event)" accept="image/*" style="width: 94px"/>
+
+                        <div *ngIf="selectedImagePath">
+                            <img [src]="selectedImagePath" alt="Selected Image" width="200" height="200" />
+                        </div>
+                        <div *ngIf="!selectedImagePath && submitted" style="color: red;">
+                            Please select Image 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-8">
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -76,7 +91,8 @@
                 <div class="col-md-12">
                     <div class="form-group">
                         <select formControlName="country" placeholder="Select Country" class="form-control"
-                            [ngClass]="{ 'is-invalid': submitted && f.country.errors }" (change)="onChange($event.target.value)">
+                            [ngClass]="{ 'is-invalid': submitted && f.country.errors }"
+                            (change)="onChange($event.target.value)">
                             <option value="">Select Country</option>
                             <option *ngFor="let country of countryList" [value]="country.name">{{country.name}}</option>
                         </select>
@@ -93,7 +109,7 @@
                         <select formControlName="state" placeholder="Select State" class="form-control"
                             [ngClass]="{ 'is-invalid': submitted && f.state.errors }">
                             <option value="">Select State</option>
-                            <option *ngFor="let state of stateList" [value]="state" >{{state}}</option>
+                            <option *ngFor="let state of stateList" [value]="state">{{state}}</option>
                         </select>
                         <div *ngIf="submitted && f.state.errors" class="invalid-feedback">
                             <div *ngIf="f.state.errors.required">Country is required</div>
@@ -167,6 +183,30 @@
                         <div *ngIf="submitted && f.companyAddress2.errors" class="invalid-feedback">
                             <div *ngIf="f.companyAddress2.errors.required">Company Address 2 is required</div>
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group">
+                        <nb-form-field>
+                            <nb-tag-list (tagRemove)="onTagRemove($event)">
+                                <nb-tag *ngFor="let tag of tags" [text]="tag" removable></nb-tag>
+                                <input type="text" placeholder="Select Hobbies" nbTagInput (tagAdd)="onTagAdd($event.value)" 
+                                    [nbAutocomplete]="autocomplete" fullWidth class="form-control"
+                                    [ngClass]="{ 'is-invalid': submitted && tagsArr.length === 0 }">
+                            </nb-tag-list>
+                                
+                            <nb-icon nbSuffix icon="search" pack="eva"></nb-icon>
+                        </nb-form-field>
+                        <div *ngIf="submitted && tagsArr.length === 0" style="color: red;">
+                            Please select Hobby
+                        </div>
+
+                        <nb-autocomplete #autocomplete (selectedChange)="onTagAdd($event)">
+                            <nb-option *ngFor="let option of options" [value]="option">{{ option }}</nb-option>
+                        </nb-autocomplete>
+
                     </div>
                 </div>
             </div>
