@@ -1,14 +1,10 @@
-import { Component, OnInit } from "@angular/core";
-import {
-  AbstractControl,
-  FormBuilder,
-  FormGroup,
-  Validators,
-} from "@angular/forms";
+import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild, } from "@angular/core";
+import { AbstractControl, FormBuilder, FormGroup, Validators, } from "@angular/forms";
 
-import { NbWindowRef } from "@nebular/theme";
+import { NbWindowRef, NbTagComponent, NbTagInputDirective } from "@nebular/theme";
 import { FormDataServiceService } from "../../../form-data-service.service";
 import { Router } from "@angular/router";
+// import { trees } from './trees-list';
 
 @Component({
   selector: "ngx-registration-popup",
@@ -23,23 +19,44 @@ export class RegistrationPopupComponent implements OnInit {
   ageValue: number = 20;
   countryList: any;
   stateList: any = [];
-
+  tagsArr: string[] = [];
+  tags: Set<string> = new Set<string>();
+  options: string[] = [ "Hockey", "Valorant", "CS:GO", "Hiking"];
+  imagePath: any;
+  selectedImagePath: any;
   constructor(
     public windowRef: NbWindowRef,
     private formBuilder: FormBuilder,
     private formDataService: FormDataServiceService,
     private router: Router,
   ) {}
+
+    // list tags
+
+    @ViewChild(NbTagInputDirective, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
+  
+    onTagRemove(tagToRemove: NbTagComponent): void {
+      this.tags.delete(tagToRemove.text);
+      this.options.push(tagToRemove.text);
+    }
+  
+    onTagAdd(value: string): void {
+      if (value) {
+        this.tags.add(value);
+        this.options = this.options.filter(o => o !== value);
+      }
+      this.tagInput.nativeElement.value = '';
+    }
+
   ngOnInit() {
     this.userRegistrationForm = this.formBuilder.group({
-      firstName: ["", [Validators.required, this.disableWhitespaces]],
-      lastName: ["", [Validators.required, this.disableWhitespaces]],
+      firstName: ["",[Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
+      lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
       emailId: [
         "",
         Validators.compose([
           Validators.required,
           Validators.pattern("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$"),
-          this.disableWhitespaces,
         ]),
       ],
       phoneNumber: ["", [Validators.required, Validators.pattern("[0-9 ]{10}")]],
@@ -52,7 +69,10 @@ export class RegistrationPopupComponent implements OnInit {
       country: ["", Validators.required],
       state: ["", Validators.required],
       newsLetter: [false],
-      age: [20, [Validators.required, Validators.min(20), Validators.max(60)]]
+      age: [20, [Validators.required, Validators.min(20), Validators.max(60)]],
+      tags: [[]],
+      selectedImagePath: [""]
+      // userImage: ['', Validators.required]
     });
 
 
@@ -113,14 +133,14 @@ export class RegistrationPopupComponent implements OnInit {
     this.stateListApi(selectedValue);
   }
 
-  disableWhitespaces(control: AbstractControl) {
-    if (control && control.value && !control.value.replace(/\s/g, "").length) {
-      control.setValue("");
-      return { required: true };
-    } else {
-      return null;
-    }
-  }
+  // disableWhitespaces(control: AbstractControl) {
+  //   if (control && control.value && !control.value.replace(/\s/g, "").length) {
+  //     control.setValue("");
+  //     return { required: true };
+  //   } else {
+  //     return null;
+  //   }
+  // }
   
   OnDestroy() {
     this.resetForm();
@@ -131,9 +151,16 @@ export class RegistrationPopupComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log("");
+    this.tagsArr = Array.from(this.tags)
+    this.f['tags'].setValue(this.tagsArr);
+    this.f['selectedImagePath'].setValue(this.selectedImagePath);
+    
+    console.log("tagstagstags",this.tags, this.tagsArr,'\n\n',this.userRegistrationForm.getRawValue());
+    console.log('Selected Image Path:', this.selectedImagePath);
+
+    // console.log("tagstagstags",this.tags, this.tagsArr,'\n\n',(this.userRegistrationForm.getRawValue()).push(this.tagsArr));
     this.submitted = true;
-    if (this.userRegistrationForm.valid){
+    if (this.userRegistrationForm.valid && this.tagsArr.length !== 0){
       this.submitted = false;
       console.log("Valid Form Data",this.userRegistrationForm.getRawValue());
       this.formDataService.setFormData(this.userRegistrationForm.getRawValue());
@@ -154,6 +181,15 @@ export class RegistrationPopupComponent implements OnInit {
   toggleNewsLetter() {
     this.newsLetter = !this.newsLetter;
   } 
+
+  onFileSelected(event: any): void {
+    const files = event.target.files;
+    if (files.length > 0) {
+      // Assuming you want to log the path of the first selected file
+      this.selectedImagePath = URL.createObjectURL(files[0]);
+    }
+  }
+
 
 }
 
