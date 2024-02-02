@@ -1,17 +1,19 @@
-import { Component, OnInit, ChangeDetectionStrategy, ElementRef, ViewChild, } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ElementRef, ViewChild, InjectionToken, Inject, Input, OnDestroy } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, Validators, } from "@angular/forms";
 
 import { NbWindowRef, NbTagComponent, NbTagInputDirective } from "@nebular/theme";
 import { FormDataServiceService } from "../../../form-data-service.service";
 import { Router } from "@angular/router";
-// import { trees } from './trees-list';
 
 @Component({
   selector: "ngx-registration-popup",
   templateUrl: "./registration-popup.component.html",
   styleUrls: ["./registration-popup.component.scss"],
 })
-export class RegistrationPopupComponent implements OnInit {
+export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDestroy  {
+  @Input() context: any;
+  @Input() assignFormDataCallback: any;
+  
   userRegistrationForm: FormGroup;
   submitted: boolean = false;
   addressType: string = "";
@@ -20,10 +22,12 @@ export class RegistrationPopupComponent implements OnInit {
   countryList: any;
   stateList: any = [];
   tagsArr: string[] = [];
+  // tags: any = ["Hockey"];
   tags: Set<string> = new Set<string>();
   options: string[] = [ "Hockey", "Valorant", "CS:GO", "Hiking"];
   imagePath: any;
   selectedImagePath: any;
+  editMode: boolean = false;
   constructor(
     public windowRef: NbWindowRef,
     private formBuilder: FormBuilder,
@@ -31,7 +35,6 @@ export class RegistrationPopupComponent implements OnInit {
     private router: Router,
   ) {}
 
-    // list tags
 
     @ViewChild(NbTagInputDirective, { read: ElementRef }) tagInput: ElementRef<HTMLInputElement>;
   
@@ -49,6 +52,7 @@ export class RegistrationPopupComponent implements OnInit {
     }
 
   ngOnInit() {
+    this.editMode = typeof this.context == 'undefined' ? false : true;
     this.userRegistrationForm = this.formBuilder.group({
       firstName: ["",[Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
       lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
@@ -100,6 +104,7 @@ export class RegistrationPopupComponent implements OnInit {
     });
 
     this.countryListApi();
+    this.stateListApi('India');
   }
 
   get f() {
@@ -133,17 +138,17 @@ export class RegistrationPopupComponent implements OnInit {
     this.stateListApi(selectedValue);
   }
 
-  // disableWhitespaces(control: AbstractControl) {
-  //   if (control && control.value && !control.value.replace(/\s/g, "").length) {
-  //     control.setValue("");
-  //     return { required: true };
-  //   } else {
-  //     return null;
-  //   }
-  // }
-  
-  OnDestroy() {
+  ngOnDestroy(): void {
     this.resetForm();
+  }
+
+  ngAfterViewInit(){
+    if(this.editMode){
+      this.userRegistrationForm.patchValue(this.context);
+      // this.tags = this.f['tags'].value;
+      this.tags = new Set<string>(this.f['tags'].value);
+      this.selectedImagePath = this.f['selectedImagePath'].value;
+    }
   }
 
   close() {
@@ -158,13 +163,15 @@ export class RegistrationPopupComponent implements OnInit {
     console.log("tagstagstags",this.tags, this.tagsArr,'\n\n',this.userRegistrationForm.getRawValue());
     console.log('Selected Image Path:', this.selectedImagePath);
 
-    // console.log("tagstagstags",this.tags, this.tagsArr,'\n\n',(this.userRegistrationForm.getRawValue()).push(this.tagsArr));
     this.submitted = true;
-    if (this.userRegistrationForm.valid && this.tagsArr.length !== 0){
+    if (this.userRegistrationForm.valid && this.tagsArr.length !== 0 && this.selectedImagePath.length !== 0){
       this.submitted = false;
       console.log("Valid Form Data",this.userRegistrationForm.getRawValue());
       this.formDataService.setFormData(this.userRegistrationForm.getRawValue());
-      this.router.navigate(['pages/profile']);
+        this.router.navigate(['pages/profile']);
+        if (this.context && typeof this.assignFormDataCallback === 'function') {
+          this.assignFormDataCallback();
+        }
       this.resetForm();
     }
     else {
@@ -185,7 +192,6 @@ export class RegistrationPopupComponent implements OnInit {
   onFileSelected(event: any): void {
     const files = event.target.files;
     if (files.length > 0) {
-      // Assuming you want to log the path of the first selected file
       this.selectedImagePath = URL.createObjectURL(files[0]);
     }
   }
