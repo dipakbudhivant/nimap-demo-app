@@ -16,12 +16,21 @@
                             I'm <b> {{formData.firstName}} {{formData.lastName}}</b> and Im above <b>{{formData.age}}</b> years and you
                             can send your emails to <b> {{formData.emailId}}</b>. I live in <b>{{formData.state}}</b>, the state of
                             <b>{{formData.country}}</b>. I like to play
-                            <span *ngFor="let tag of formData.tags; index as i"><b>{{tag}},</b>
-                                <!-- <span *ngIf="i > 1">,</span> <span *ngIf="i <= formData.tags.length - 1 && !(i > 1)"> and </span> -->
-                            </span>.
+                            <span *ngFor="let tag of formData.tags; index as i">
+                                <b>{{ tag }}</b>
+                                <span *ngIf="i !== formData.tags.length - 1">, </span>
+                                <span *ngIf="i === formData.tags.length - 1">. </span>
+                              </span>                              
                             <span *ngIf="formData.newsLetter">And please send me newsletters.</span>
                             Please reach out to me on my <b>{{formData.phoneNumber}}</b> phone number.
                         </p>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-12 text-right ">
+                        <button class="control-button" nbButton size="medium" type="button" status="warning" outline
+                            (click)="editForm()" style="margin-left:5px">Edit</button>
                     </div>
                 </div>
             </nb-card-body>
