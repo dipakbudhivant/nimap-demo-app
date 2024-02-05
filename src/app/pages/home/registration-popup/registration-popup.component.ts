@@ -29,6 +29,7 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   imagePath: any;
   selectedImagePath: any;
   editMode: boolean = false;
+  imgSizeError: boolean;
   constructor(
     public windowRef: NbWindowRef,
     private formBuilder: FormBuilder,
@@ -55,8 +56,8 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.editMode = typeof this.context == 'undefined' ? false : true;
     this.userRegistrationForm = this.formBuilder.group({
-      firstName: ["",[Validators.required, Validators.pattern("^[a-zA-Z]{1,10}$")]],
-      lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z]{1,10}$")]],
+      firstName: ["",[Validators.required, Validators.pattern("^[A-Za-z]{1,20}$")]],
+      lastName: ["", [Validators.required, Validators.pattern("^[A-Za-z]{1,20}$")]],
       emailId: [
         "",
         Validators.compose([
@@ -193,23 +194,37 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   onFileSelected(event: any): void {
     const files = event.target.files;
     if (files.length > 0) {
-      this.selectedImagePath = URL.createObjectURL(files[0]);
-      const file = event.target.files[0];
-    
-    if (file) {
+      const file = files[0];
       if (file.type.startsWith('image/')) {
         const reader = new FileReader();
+  
         reader.onload = (e: any) => {
-          this.selectedImagePath = e.target.result;
+          const img = new Image();
+          img.src = e.target.result;
+  
+          img.onload = () => {
+            const width = img.width;
+            const height = img.height;
+  
+            if (width === 310 && height === 325) {
+              this.selectedImagePath = e.target.result;
+              this.imgSizeError = false;
+            } else {
+              this.selectedImagePath = null;
+              this.imgSizeError = true;
+            }
+          };
         };
+  
         reader.readAsDataURL(file);
       } else {
         this.selectedImagePath = null;
         this.imgSubmitted = true;
+        this.imgSizeError = false;
       }
     }
-    }
   }
+  
 
 
 }
