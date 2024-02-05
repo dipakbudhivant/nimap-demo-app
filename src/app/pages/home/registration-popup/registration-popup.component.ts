@@ -16,6 +16,7 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   
   userRegistrationForm: FormGroup;
   submitted: boolean = false;
+  imgSubmitted: boolean = false;
   addressType: string = "";
   newsLetter: boolean = false;
   ageValue: number = 20;
@@ -54,8 +55,8 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.editMode = typeof this.context == 'undefined' ? false : true;
     this.userRegistrationForm = this.formBuilder.group({
-      firstName: ["",[Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
-      lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z ]+$")]],
+      firstName: ["",[Validators.required, Validators.pattern("^[a-zA-Z]{1,10}$")]],
+      lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z]{1,10}$")]],
       emailId: [
         "",
         Validators.compose([
@@ -193,6 +194,20 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
     const files = event.target.files;
     if (files.length > 0) {
       this.selectedImagePath = URL.createObjectURL(files[0]);
+      const file = event.target.files[0];
+    
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = (e: any) => {
+          this.selectedImagePath = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      } else {
+        this.selectedImagePath = null;
+        this.imgSubmitted = true;
+      }
+    }
     }
   }
 
