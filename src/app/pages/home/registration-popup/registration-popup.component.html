@@ -2,15 +2,18 @@
     <div class="row">
         <div class="col-md-4">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="form-group" >
                         <input type="file" class="" id="imageInput" (change)="onFileSelected($event)" accept="image/*" style="width: 94px"/>
 
                         <div *ngIf="selectedImagePath">
-                            <img [src]="selectedImagePath" alt="Selected Image" width="200" height="200" />
+                            <img [src]="selectedImagePath" alt="Selected Image" width="190" height="205" />
                         </div>
                         <div *ngIf="!selectedImagePath && imgSubmitted" style="color: red;">
                             Please select Image 
+                        </div>
+                        <div *ngIf="!selectedImagePath && imgSizeError" style="color: red;">
+                            Please upload a photo with size 310x325 px.
                         </div>
                     </div>
                 </div>
