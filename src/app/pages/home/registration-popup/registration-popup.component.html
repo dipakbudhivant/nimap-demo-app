@@ -9,7 +9,7 @@
                         <div *ngIf="selectedImagePath">
                             <img [src]="selectedImagePath" alt="Selected Image" width="200" height="200" />
                         </div>
-                        <div *ngIf="!selectedImagePath && submitted" style="color: red;">
+                        <div *ngIf="!selectedImagePath && imgSubmitted" style="color: red;">
                             Please select Image 
                         </div>
                     </div>
