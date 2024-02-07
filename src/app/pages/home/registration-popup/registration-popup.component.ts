@@ -1,7 +1,7 @@
 import { Component, OnInit, AfterViewInit, ChangeDetectionStrategy, ElementRef, ViewChild, InjectionToken, Inject, Input, OnDestroy } from "@angular/core";
 import { AbstractControl, FormBuilder, FormGroup, Validators, } from "@angular/forms";
 
-import { NbWindowRef, NbTagComponent, NbTagInputDirective } from "@nebular/theme";
+import { NbWindowRef, NbTagComponent, NbTagInputDirective, NbToastrService } from "@nebular/theme";
 import { FormDataServiceService } from "../../../form-data-service.service";
 import { Router } from "@angular/router";
 
@@ -29,12 +29,13 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   imagePath: any;
   selectedImagePath: any;
   editMode: boolean = false;
-  imgSizeError: boolean;
+  imgSizeError: boolean = false;
   constructor(
     public windowRef: NbWindowRef,
     private formBuilder: FormBuilder,
     private formDataService: FormDataServiceService,
     private router: Router,
+    private toastrService: NbToastrService
   ) {}
 
 
@@ -56,7 +57,7 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
   ngOnInit() {
     this.editMode = typeof this.context == 'undefined' ? false : true;
     this.userRegistrationForm = this.formBuilder.group({
-      firstName: ["",[Validators.required, Validators.pattern("^[A-Za-z]{1,20}$")]],
+      firstName: ["",[Validators.required, Validators.pattern("^[A-Za-z]{1,10}$")]],
       lastName: ["", [Validators.required, Validators.pattern("^[A-Za-z]{1,20}$")]],
       emailId: [
         "",
@@ -166,7 +167,7 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
     console.log('Selected Image Path:', this.selectedImagePath);
 
     this.submitted = true;
-    if (this.userRegistrationForm.valid && this.tagsArr.length !== 0 && this.selectedImagePath.length !== 0){
+    if (this.userRegistrationForm.valid && this.tagsArr.length !== 0 && !this.imgSizeError){
       this.submitted = false;
       console.log("Valid Form Data",this.userRegistrationForm.getRawValue());
       this.formDataService.setFormData(this.userRegistrationForm.getRawValue());
@@ -175,10 +176,12 @@ export class RegistrationPopupComponent implements OnInit, AfterViewInit, OnDest
           this.assignFormDataCallback();
         }
       this.resetForm();
+      this.toastrService.show("You have successfully register. ", "Registration Done...", { status: 'success', duration: 3000 });
     }
     else {
       this.submitted = true;
       console.log("Invalid Form")
+      this.toastrService.show("Invalid Form. ", "Registration Inprogress...", { status: 'danger', duration: 3000 });
     }
   }
   
